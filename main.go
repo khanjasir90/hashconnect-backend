@@ -27,7 +27,7 @@ func goDotEnvVariable(key string) string {
 func testRoute(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("On test route")
-	json.NewEncoder(w).Encode("on test route")
+	json.NewEncoder(w).Encode("on test route only for testing purpose")
 }
 
 func main() {

@@ -6,24 +6,19 @@ import (
 	"log"
 	"net/http"
 	"github.com/gorilla/mux"
-	"github.com/spf13/viper"
+	"github.com/joho/godotenv"
+	"os"
 )
 
-func goDotEnvVariable(key string) string {
-	viper.SetConfigFile(".env")
-	err := viper.ReadInConfig()
-	if err != nil {
-		fmt.Println("Error while reading Env File")
-		return ""
+func getPort() string {
+	godotenv.Load()
+	p := os.Getenv("PORT")
+	fmt.Println("ENV"+p)
+	if p != "" {
+		return ":" + p
 	}
-	value, ok := viper.Get(key).(string)
-	if !ok {
-		fmt.Println("Error while getting key related to key")
-		return ""
-	}
-	return value
-}
-
+	return ":4000"
+}	
 func testRoute(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("On test route")
@@ -31,10 +26,7 @@ func testRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	PORT := goDotEnvVariable("PORT")
-	if PORT == "" {
-		PORT = ":3000"
-	}
+	PORT := getPort()
 	fmt.Println(PORT)
 	router := mux.NewRouter()
 	router.HandleFunc("/test", testRoute).Methods("GET")
